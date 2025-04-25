@@ -16,8 +16,29 @@ import {
   DepthOfField,
 } from "@react-three/postprocessing";
 
+function Moon({ position, orbitSpeed, distance, color, texture }) {
+  const moonRef = useRef();
+
+  useFrame(({ clock }) => {
+    const t = clock.getElapsedTime();
+    const x = Math.sin(t * orbitSpeed) * distance;
+    const z = Math.cos(t * orbitSpeed) * distance;
+
+    moonRef.current.position.x = x;
+    moonRef.current.position.z = z;
+  });
+
+  return (
+    <mesh ref={moonRef} position={position}>
+      <sphereGeometry args={[0.5, 32, 32]} />
+      <meshStandardMaterial map={texture} color={color} />
+    </mesh>
+  );
+}
+
 export default function Scene() {
-  const moonTexture = useLoader(THREE.TextureLoader, "/textures/moon.png");
+  const moonTexture = useLoader(THREE.TextureLoader, "/textures/moon.jpg");
+  const earthTexture = useLoader(THREE.TextureLoader, "/textures/earth.jpg");
 
   return (
     <div style={{ width: "100%", height: "100vh", background: "#000" }}>
@@ -25,7 +46,9 @@ export default function Scene() {
         <Suspense fallback={null}>
           <color attach="background" args={["#000"]} />
           <fog attach="fog" args={["#000", 15, 50]} />
-          <ambientLight intensity={0.1} />
+          <ambientLight intensity={0.3} />
+          <pointLight position={[10, 10, 10]} intensity={7} />
+          <directionalLight position={[-5, 5, 5]} intensity={2} />
 
           <Stars
             radius={100}
@@ -39,7 +62,7 @@ export default function Scene() {
           <group>
             <mesh position={[0, 0, 0]}>
               <sphereGeometry args={[2, 32, 32]} />
-              <meshStandardMaterial map={moonTexture} />
+              <meshStandardMaterial map={earthTexture} />
             </mesh>
 
             <Moon
@@ -47,18 +70,21 @@ export default function Scene() {
               orbitSpeed={0.5}
               distance={4}
               color="gray"
+              texture={moonTexture}
             />
             <Moon
               position={[-4, 0, 0]}
               orbitSpeed={0.3}
               distance={4}
               color="gray"
+              texture={moonTexture}
             />
             <Moon
               position={[2, 2, 4]}
               orbitSpeed={0.7}
               distance={5}
               color="gray"
+              texture={moonTexture}
             />
           </group>
 
@@ -103,25 +129,5 @@ export default function Scene() {
         <div style={{ fontSize: "18px", marginBottom: "5px" }}>mooooon</div>
       </div>
     </div>
-  );
-}
-
-function Moon({ position, orbitSpeed, distance, color }) {
-  const moonRef = useRef();
-
-  useFrame(({ clock }) => {
-    const t = clock.getElapsedTime();
-    const x = Math.sin(t * orbitSpeed) * distance;
-    const z = Math.cos(t * orbitSpeed) * distance;
-
-    moonRef.current.position.x = x;
-    moonRef.current.position.z = z;
-  });
-
-  return (
-    <mesh ref={moonRef} position={position}>
-      <sphereGeometry args={[0.5, 32, 32]} />
-      <meshStandardMaterial color={color} />
-    </mesh>
   );
 }
