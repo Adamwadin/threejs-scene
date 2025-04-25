@@ -1,6 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
-import Header from './components/header'
-import Footer from './components/footer'
+import Header from "./components/header";
+import Footer from "./components/footer";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,22 +14,26 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: 'DriveWell 3D',
-  description: 'Interactive 3D Car Viewer',
-}
-
-
+  title: "3D moooon",
+  description: "mon",
+};
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body style={{ margin: 0 }}>
         <Header />
-        <main style={{ minHeight: 'calc(100vh - 160px)', padding: '2rem', textAlign: 'center' }}>
+        <main
+          style={{
+            minHeight: "calc(100vh - 160px)",
+            padding: "2rem",
+            textAlign: "center",
+          }}
+        >
           {children}
         </main>
         <Footer />
       </body>
     </html>
-  )
+  );
 }
